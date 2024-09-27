@@ -236,14 +236,19 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   setTimer1(50);
+  setTimer2(50);
   int index=0;
   while (1)
   {
 	  	if (timer1_flag == 1) {
-	  		setTimer1(100);
+	  		setTimer1(25);
 	  		update7SEG(index);
 	  		index++;
 	  		if (index > 3) index = 0;
+	  	}
+	  	if (timer2_flag == 1) {
+	  		setTimer2(50);
+	  		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	  	}
     /* USER CODE END WHILE */
 
