@@ -198,8 +198,26 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  setTimer1(50);
+  int current_display = 0;
   while (1)
   {
+	  if (timer1_flag == 1) {
+	  setTimer1(50);
+
+	  	  if (current_display == 0) {
+	  		  HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_RESET);
+	  		  HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+	  		  display7SEG(1);
+	  		  current_display = 1;
+	  	  	  	  	  	  }
+	  	  else {
+	  		  HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	  		  HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_RESET);
+	  		  display7SEG(2);
+	  		  current_display = 0;
+	  		              }
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
