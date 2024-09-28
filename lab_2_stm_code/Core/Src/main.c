@@ -197,6 +197,14 @@ void update7SEG(int index) {
 	        break;
 	    }
 	}
+int hour = 15, minute = 8, second = 50;
+
+void updateClockBuffer() {
+    led_buffer[0] = hour / 10;
+    led_buffer[1] = hour % 10;
+    led_buffer[2] = minute / 10;
+    led_buffer[3] = minute % 10;
+}
 /* USER CODE END 0 */
 
 /**
@@ -237,7 +245,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   setTimer1(50);
   setTimer2(50);
+  setTimer3(50);
   int index=0;
+  updateClockBuffer();
+  // sử dụng updateClockBuffer ở đây để cập nhật giá trị hiên thị cho đồng hồ ( vì ban đã có giá trị led_buffer set sẵn)
   while (1)
   {
 	  	if (timer1_flag == 1) {
@@ -249,6 +260,22 @@ int main(void)
 	  	if (timer2_flag == 1) {
 	  		setTimer2(50);
 	  		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  	}
+	  	if (timer3_flag == 1) {
+	  	      setTimer3(100);
+	  	      second++;
+	  	      if (second >= 60) {
+	  	        second = 0;
+	  	        minute++;
+	  	        if (minute >= 60) {
+	  	          minute = 0;
+	  	          hour++;
+	  	          if (hour >= 24) {
+	  	            hour = 0;
+	  	          }
+	  	        }
+	  	        updateClockBuffer();
+	  	      }
 	  	}
     /* USER CODE END WHILE */
 
