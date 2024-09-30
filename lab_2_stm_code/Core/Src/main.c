@@ -246,6 +246,7 @@ int main(void)
   setTimer1(50);
   setTimer2(50);
   setTimer3(50);
+  setTimer4(50);
   int index=0;
   updateClockBuffer();
   // sử dụng updateClockBuffer ở đây để cập nhật giá trị hiên thị cho đồng hồ ( vì ban đã có giá trị led_buffer set sẵn)
@@ -276,6 +277,10 @@ int main(void)
 	  	        }
 	  	        updateClockBuffer();
 	  	      }
+	  	}
+	  	if (timer4_flag == 1) {
+	  		setTimer4(200);
+	  		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	  	}
     /* USER CODE END WHILE */
 
