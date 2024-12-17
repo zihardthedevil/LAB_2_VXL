@@ -159,7 +159,52 @@ switch (num) {
 		break;
 	}
 }
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 2, 3, 4};
 
+void update7SEG(int index) {
+	switch (index) {
+		case 0:
+			HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[0]);
+			break;
+	    case 1:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_RESET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[1]);
+	        break;
+	    case 2:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_RESET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[2]);
+	        break;
+	    case 3:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_RESET);
+	        display7SEG(led_buffer[3]);
+	        break;
+	    default:
+	        break;
+	    }
+	}
+int hour = 15, minute = 8, second = 50;
+
+void updateClockBuffer() {
+    led_buffer[0] = hour / 10;
+    led_buffer[1] = hour % 10;
+    led_buffer[2] = minute / 10;
+    led_buffer[3] = minute % 10;
+}
 /* USER CODE END 0 */
 
 /**
@@ -198,8 +243,40 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  setTimer1(50);
+  setTimer2(50);
+  setTimer3(50);
+  int index=0;
+  updateClockBuffer();
+  // sử dụng updateClockBuffer ở đây để cập nhật giá trị hiên thị cho đồng hồ ( vì ban đã có giá trị led_buffer set sẵn)
   while (1)
   {
+	  	if (timer1_flag == 1) {
+	  		setTimer1(25);
+	  		update7SEG(index);
+	  		index++;
+	  		if (index > 3) index = 0;
+	  	}
+	  	if (timer2_flag == 1) {
+	  		setTimer2(50);
+	  		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  	}
+	  	if (timer3_flag == 1) {
+	  	      setTimer3(100);
+	  	      second++;
+	  	      if (second >= 60) {
+	  	        second = 0;
+	  	        minute++;
+	  	        if (minute >= 60) {
+	  	          minute = 0;
+	  	          hour++;
+	  	          if (hour >= 24) {
+	  	            hour = 0;
+	  	          }
+	  	        }
+	  	        updateClockBuffer();
+	  	      }
+	  	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
