@@ -159,7 +159,44 @@ switch (num) {
 		break;
 	}
 }
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 2, 3, 4};
 
+void update7SEG(int index) {
+	switch (index) {
+		case 0:
+			HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[0]);
+			break;
+	    case 1:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_RESET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[1]);
+	        break;
+	    case 2:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_RESET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_SET);
+	        display7SEG(led_buffer[2]);
+	        break;
+	    case 3:
+	    	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, GPIO_PIN_SET);
+	    	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, GPIO_PIN_RESET);
+	        display7SEG(led_buffer[3]);
+	        break;
+	    default:
+	        break;
+	    }
+	}
 /* USER CODE END 0 */
 
 /**
@@ -198,8 +235,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  setTimer1(50);
+  int index=0;
   while (1)
   {
+	  	if (timer1_flag == 1) {
+	  		setTimer1(100);
+	  		update7SEG(index);
+	  		index++;
+	  		if (index > 3) index = 0;
+	  	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
